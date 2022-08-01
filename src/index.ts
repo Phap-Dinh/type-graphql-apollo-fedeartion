@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ApolloGateway } from '@apollo/gateway';
+import { ApolloGateway, IntrospectAndCompose } from '@apollo/gateway';
 import { ApolloServer } from 'apollo-server';
 
 import * as accounts from './accounts';
@@ -13,7 +13,7 @@ async function bootstrap() {
   const products_URL = await products.listen(3003);
   const inventory_URL = await inventory.listen(3004);
 
-  const serviceList = [
+  const subgraphs = [
     { name: "accounts", url: accounts_URL },
     { name: "reviews", url: reviews_URL },
     { name: "products", url: products_URL },
@@ -21,12 +21,14 @@ async function bootstrap() {
   ];
 
   const gateway = new ApolloGateway({
-    serviceList,
+    supergraphSdl: new IntrospectAndCompose({
+      subgraphs,
+    })
   });
 
   const server = new ApolloServer({
     gateway,
-    subscriptions: false,
+    // subscriptions: false,
   });
 
   server.listen({ port: 3000 }).then(({ url }) => {

@@ -11,3 +11,18 @@
   $ yarn add type-graphql
 
   $ yarn add @apollo/federation@0.25.0
+
+# Max version
+  "dependencies": {
+    "@apollo/federation": "0.33.0",
+    "@apollo/gateway": "0.51.0",
+    "apollo-server": "^3.10.0",
+    "graphql": "15.8.0",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1"
+  },
+
+# Note 
+  - type-graphql `does` support <= graphql v15.8.0
+  - But @apollo/gateway v2 `need` => graphql v16.0.0 
+    => to use @apollo/gateway `v1`   
