@@ -1,12 +1,17 @@
 import gql from 'graphql-tag';
 import { specifiedDirectives } from 'graphql';
-import federationDirectives from '@apollo/federation/dist/directives';
+// import federationDirectives from '@apollo/federation/dist/directives';
+import { knownSubgraphDirectives as federationDirectives} from '@apollo/subgraph/dist/directives';
 import { addResolversToSchema, GraphQLResolverMap } from 'apollo-graphql';
 import { buildSchema, BuildSchemaOptions, createResolversMap } from 'type-graphql';
-import {
-  printSchema,
-  buildFederatedSchema as buildApolloFederationSchema,
-} from '@apollo/federation';
+// import {
+//   printSchema,
+//   buildFederatedSchema as buildApolloFederationSchema,
+// } from '@apollo/federation';
+import { 
+  printSubgraphSchema as printSchema, 
+  buildSubgraphSchema as buildApolloFederationSchema 
+} from '@apollo/subgraph'
 
 export async function buildFederatedSchema(
   options: Omit<BuildSchemaOptions, "skipCheck">,

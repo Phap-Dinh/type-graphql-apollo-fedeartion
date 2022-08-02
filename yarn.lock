@@ -77,7 +77,7 @@
     deep-equal "^2.0.5"
     pretty-format "^27.4.6"
 
-"@apollo/subgraph@^0.4.2":
+"@apollo/subgraph@0.4.2", "@apollo/subgraph@^0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@apollo/subgraph/-/subgraph-0.4.2.tgz#f8516f1d5e5fbd57189727497ed9f805fa5017c8"
   integrity sha512-sIGzqfUryW6tS5RPWp1awtO+5CehjPV6xbDrWS4I2Hsj8rug8Y9oiMpcnNk8GaQ1TF3UEf99ZL16mNa4J++IIQ==
