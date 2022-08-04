@@ -1,11 +1,27 @@
 import 'reflect-metadata';
-import { ApolloGateway, IntrospectAndCompose } from '@apollo/gateway';
+import { 
+  ApolloGateway, 
+  IntrospectAndCompose, 
+  RemoteGraphQLDataSource, 
+  GraphQLDataSourceProcessOptions 
+} from '@apollo/gateway';
 import { ApolloServer } from 'apollo-server';
 
 import * as accounts from './accounts';
 import * as reviews from './reviews';
 import * as products from './products';
 import * as inventory from './inventory';
+
+type MyContext = { authorization: string } 
+
+class AuthenticatedDataSource extends RemoteGraphQLDataSource {
+  willSendRequest({ request, context }: GraphQLDataSourceProcessOptions<MyContext>) {
+    const { authorization } = (context as MyContext);
+    if (authorization) {
+      request?.http?.headers.set("authorization", authorization);
+    }
+  }
+}
 
 async function bootstrap() {
   const accounts_URL = await accounts.listen(3001);
@@ -23,12 +39,16 @@ async function bootstrap() {
   const gateway = new ApolloGateway({
     supergraphSdl: new IntrospectAndCompose({
       subgraphs,
-    })
+    }),
+    buildService({ url }) {
+      return new AuthenticatedDataSource({ url });
+    }
   });
 
   const server = new ApolloServer({
     gateway,
     // subscriptions: false,
+    context: ({ req }) => ({ authorization: req.headers.authorization })
   });
 
   server.listen({ port: 3000 }).then(({ url }) => {

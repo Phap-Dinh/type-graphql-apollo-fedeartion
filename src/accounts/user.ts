@@ -13,5 +13,5 @@ export default class User {
   name: string;
 
   @Field()
-  birthDate: string;
+  birthDate?: string;
 }

@@ -18,7 +18,8 @@ export async function listen(port: number): Promise<string> {
   );
 
   const server = new ApolloServer({
-    schema,  
+    schema,
+    context: ({ req }) => ({ authorization: req.headers.authorization })
   });
 
   const { url } = await server.listen({ port });
