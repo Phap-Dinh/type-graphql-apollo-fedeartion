@@ -14,7 +14,21 @@ import * as inventory from './inventory';
 
 type MyContext = { authorization: string } 
 
-class AuthenticatedDataSource extends RemoteGraphQLDataSource {
+class DataSourceWithServerId extends RemoteGraphQLDataSource {
+  // custom response
+  async didReceiveResponse({ response, context }: any) {
+    const serverId = response.http.headers.get('Server-Id');
+    if (serverId) {
+      context.serverIds.push(serverId);
+    }
+
+    // get cookie from account subgraph
+    // const myCookie = response.http.headers.get('set-cookie')
+
+    return response;
+  }
+
+  // custom request
   willSendRequest({ request, context }: GraphQLDataSourceProcessOptions<MyContext>) {
     const { authorization } = (context as MyContext);
     if (authorization) {
@@ -41,14 +55,37 @@ async function bootstrap() {
       subgraphs,
     }),
     buildService({ url }) {
-      return new AuthenticatedDataSource({ url });
+      return new DataSourceWithServerId({ url });
     }
   });
 
   const server = new ApolloServer({
     gateway,
     // subscriptions: false,
-    context: ({ req }) => ({ authorization: req.headers.authorization })
+    context: ({ req }) => ({ 
+        authorization: req.headers.authorization,
+        serverIds: []
+        // cookie: ""
+    }),
+    plugins: [
+      {
+        requestDidStart(): any {
+          return {
+            willSendResponse({ context, response }: any) {
+              response.http.headers.set(
+                'Server-Id',
+                context.serverIds.join(',')
+              );
+              
+              // can not return cookie, only return headers
+              // response.http.headers.set("Cookies", context.cookie);
+            
+            },
+            
+          };
+        }
+      }
+    ]
   });
 
   server.listen({ port: 3000 }).then(({ url }) => {

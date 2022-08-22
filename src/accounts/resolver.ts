@@ -33,6 +33,19 @@ export default class AccountsResolver {
     return user;
   }
 
+  @Query(() => String)
+  serverId(
+    @Ctx() { res }: MyContext
+  ) {
+    // add Server-Id to response's header
+    res.append("Server-Id", "1233")
+
+    // response cookie
+    // res.cookie("myid", "fsfsf")
+
+    return "1233";
+  }
+
   @Query(() => [User!]!)
   users() {
     return users;

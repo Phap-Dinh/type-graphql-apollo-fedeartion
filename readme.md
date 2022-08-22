@@ -79,4 +79,6 @@
 
   and `Headers`
   
-  authorization 3
+  authorization 2
+
+  Note: `NO` include cookie
