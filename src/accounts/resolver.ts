@@ -37,11 +37,12 @@ export default class AccountsResolver {
   serverId(
     @Ctx() { res }: MyContext
   ) {
-    // add Server-Id to response's header
-    res.append("Server-Id", "1233")
+    // add server-id to response's header
+    res.append("server-id", "1233")
 
-    // response cookie
-    // res.cookie("myid", "fsfsf")
+    // response cookie in 2 ways
+    // res.cookie("myid", "fsfsf", { httpOnly: true, secure: true, expires: new Date(Date.now() + 3600) });
+    res.setHeader("set-cookie", "myid2=asas");
 
     return "1233";
   }
